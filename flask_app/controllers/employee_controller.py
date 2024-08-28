@@ -47,3 +47,5 @@ def logout():
 def dashboard():
     if 'employee_id' not in session:
         return redirect('/')
+    employee = Employee.get_by_id({'id':session['employee_id']})
+    return render_template('dashboard.html', employee=employee)
