@@ -1,0 +1,49 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Auth Admin{% endblock title %}
+{% block main %}
+<div class="container">
+    <p>Admin Control Panel</p>
+    <table class="table-striped table">
+        <thead>
+            <tr>
+                <th>Requester</th>
+                <th>Current Rights</th>
+                <th>Requested Level</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in all_requests %}
+                <tr>
+                    <td>{{request.requester.email}}</td>
+                    <td>
+                        <ul>
+                            {% if request.requester.admin == 1 %}
+                                <li>Admin</li>
+                            {% endif %}
+                            {% if request.requester.inventory_access == 1 %}
+                                <li>Inventory</li>
+                            {% endif %}
+                            {% if request.requester.sales_access == 1 %}
+                                <li>Sales</li>
+                            {% endif %}
+                        </ul>
+                    </td>
+                    <td>
+                        {% if request.requested_level == 0 %}
+                        Sales
+                        {% elif request.requested_level == 1 %}
+                        Inventory
+                        {% elif request.requested_level == 2 %}
+                        Admin
+                        {% else %}
+                        error loading request
+                        {% endif %}
+                    </td>
+                    <td>actions tbd</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock main %}

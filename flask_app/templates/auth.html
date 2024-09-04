@@ -1,0 +1,42 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Access{% endblock title %}
+{% block main %}
+    <div class="container">
+        {% for message in get_flashed_messages()  %}
+            <p class="text-danger">{{message}}</p>
+        {% endfor %}
+        <p>Sales Access 
+        {% if employee.sales_access == 1 %}
+            Granted
+        {% elif employee.sales_access == 2%}
+            Request Pending
+        {% elif employee.sales_access == 3%}
+            <span class="text-danger">DENIED</span>
+        {% else %}
+            <a href="/auth/{{employee.id}}/0" class="btn btn-primary">Request</a>
+        {% endif %}
+        </p>
+        <p>Inventory Access 
+        {% if employee.inventory_access == 1 %}
+            Granted
+        {% elif employee.inventory_access == 2%}
+            Request Pending
+        {% elif employee.inventory_access == 3%}
+            <span class="text-danger">DENIED</span>
+        {% else %}
+            <a href="/auth/{{employee.id}}/1" class="btn btn-primary">Request</a>
+        {% endif %}
+        </p>
+        <p>Admin Access 
+        {% if employee.admin == 1 %}
+            Granted <a href="/auth/admin" class="mb-3">Auth Admin Page</a>
+        {% elif employee.admin == 2%}
+            Request Pending
+        {% elif employee.admin == 3%}
+            <span class="text-danger">DENIED</span>
+        {% else %}
+            <a href="/auth/{{employee.id}}/2" class="btn btn-primary">Request</a>
+        {% endif %}
+        </p>
+    </div>
+{% endblock main %}

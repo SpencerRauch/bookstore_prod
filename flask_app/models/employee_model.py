@@ -1,8 +1,17 @@
 from flask_app.config.mysqlconfig import connect_to_mysql
 from flask_app import DATABASE
+from flask_app.models import authorization_model
 from flask import flash
 import re
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
+
+"""
+ACCESS LEVELS:
+             0 - no access (default)
+             1 - granted
+             2 - requested
+             3 - denied
+"""
 
 class Employee:
     def __init__(self,data) -> None:
@@ -45,6 +54,31 @@ class Employee:
         if results:
             return cls(results[0])
         return False
+    
+    @classmethod
+    def new_auth_request(cls,category,employee_id):
+        attribute = ""
+        print(category)
+        category = int(category)
+        match category:
+            case 0:
+                attribute = "sales_access"
+            case 1:
+                attribute = "inventory_access"
+            case 2:
+                attribute = "admin"
+        query = """
+            UPDATE employees
+            SET """ + attribute + """ = 2
+            WHERE id = %(employee_id)s;
+        """
+        data = {
+            'attribute': attribute,
+            'employee_id': employee_id
+        }
+        return connect_to_mysql(DATABASE).query_db(query,data)
+
+
     
     @staticmethod
     def valid_register(data):
