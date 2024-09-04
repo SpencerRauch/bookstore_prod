@@ -18,7 +18,7 @@ REQUESTED LEVELS:
 """
 
 class Authorization:
-    def __init__(self,data,with_requester=False) -> None:
+    def __init__(self,data,with_requester=False, with_responder=False) -> None:
         self.id = data['id']
         self.status = data['status']
         self.requested_level = data['requested_level']
@@ -28,7 +28,10 @@ class Authorization:
         self.updated_at = data['updated_at']
         if with_requester:
             self.requester = employee_model.Employee.get_by_id({'id':self.requesting_id})
-
+        if with_responder:
+            if self.responding_id:
+                self.responder = employee_model.Employee.get_by_id({'id':self.responding_id})
+                
     @classmethod
     def get_all(cls):
         query = """
@@ -41,15 +44,36 @@ class Authorization:
         return all_requests
 
     @classmethod
-    def get_all_with_requester(cls):
+    def get_new_with_requester(cls):
         query = """
-            SELECT * FROM authorizations;
+            SELECT * FROM authorizations WHERE status = 2;
         """
         results = connect_to_mysql(DATABASE).query_db(query)
         all_requests = []
         for row in results:
-            all_requests.append(cls(row,True))
+            all_requests.append(cls(row,with_requester=True))
         return all_requests
+
+    @classmethod
+    def get_old(cls):
+        query = """
+            SELECT * FROM authorizations WHERE status != 2;
+        """
+        results = connect_to_mysql(DATABASE).query_db(query)
+        all_requests = []
+        for row in results:
+            all_requests.append(cls(row,True,True))
+        return all_requests
+    
+    @classmethod
+    def get_by_id(cls,data):
+        query = """
+            SELECT * FROM authorizations WHERE id = %(id)s;
+        """
+        results = connect_to_mysql(DATABASE).query_db(query,data)
+        if results:
+            return cls(results[0])
+        return False
 
     @classmethod
     def create(cls,data):
@@ -64,7 +88,7 @@ class Authorization:
         query = """
             UPDATE authorizations 
             SET 
-            status = 1
+            status = 1,
             responding_id = %(responding_id)s
             WHERE authorizations.id = %(id)s;
         """
@@ -75,7 +99,7 @@ class Authorization:
         query = """
             UPDATE authorizations 
             SET 
-            status = 0
+            status = 0,
             responding_id = %(responding_id)s
             WHERE authorizations.id = %(id)s;
         """

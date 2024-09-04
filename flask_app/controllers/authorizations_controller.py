@@ -54,9 +54,37 @@ def new_auth_request(requesting_id, requested_level):
     
     return redirect("/auth")
 
+#! Auth Admin Page
 @app.route("/auth/admin")
 @enforce_admin
 def auth_admin():
-    all_requests = Authorization.get_all_with_requester()
-    return render_template("auth_admin.html", all_requests = all_requests)
+    new_requests = Authorization.get_new_with_requester()
+    old_requests = Authorization.get_old()
+    return render_template("auth_admin.html", new_requests = new_requests, old_requests=old_requests)
+
+#! Grant Authorization Action
+@app.route("/auth/<int:auth_id>/grant")
+@enforce_admin
+def grant_access(auth_id):
+    request = Authorization.get_by_id({'id':auth_id})
+    if not request:
+        flash("Error processing request")
+        return redirect("/auth/admin")
+    Employee.grant_auth_request(request.requested_level,request.requesting_id)
+    Authorization.grant({'id':auth_id,'responding_id':session['employee_id']})
+    return redirect("/auth/admin")
+
+#! Deny Authorization Action
+@app.route("/auth/<int:auth_id>/deny")
+@enforce_admin
+def deny_access(auth_id):
+    request = Authorization.get_by_id({'id':auth_id})
+    if not request:
+        flash("Error processing request")
+        return redirect("/auth/admin")
+    Employee.deny_auth_request(request.requested_level,request.requesting_id)
+    Authorization.deny({'id':auth_id,'responding_id':session['employee_id']})
+    return redirect("/auth/admin")
+
+
 

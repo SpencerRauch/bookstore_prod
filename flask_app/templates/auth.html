@@ -1,42 +1,42 @@
 {% extends 'nav_bar.html' %}
 {% block title %}Access{% endblock title %}
 {% block main %}
-    <div class="container">
-        {% for message in get_flashed_messages()  %}
-            <p class="text-danger">{{message}}</p>
-        {% endfor %}
-        <p>Sales Access 
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <p class="text-danger">{{message}}</p>
+    {% endfor %}
+    <p>Sales Access --
         {% if employee.sales_access == 1 %}
-            Granted
+        Granted
         {% elif employee.sales_access == 2%}
-            Request Pending
+        <span class="text-secondary">Request Pending</span>
         {% elif employee.sales_access == 3%}
-            <span class="text-danger">DENIED</span>
+        <span class="text-danger">DENIED</span> contact admin if you feel this is in error
         {% else %}
-            <a href="/auth/{{employee.id}}/0" class="btn btn-primary">Request</a>
+        <a href="/auth/{{employee.id}}/0" class="btn btn-primary">Request</a>
         {% endif %}
-        </p>
-        <p>Inventory Access 
+    </p>
+    <p>Inventory Access --
         {% if employee.inventory_access == 1 %}
-            Granted
+        Granted
         {% elif employee.inventory_access == 2%}
-            Request Pending
+        <span class="text-secondary">Request Pending</span>
         {% elif employee.inventory_access == 3%}
-            <span class="text-danger">DENIED</span>
+        <span class="text-danger">DENIED</span> contact admin if you feel this is in error
         {% else %}
-            <a href="/auth/{{employee.id}}/1" class="btn btn-primary">Request</a>
+        <a href="/auth/{{employee.id}}/1" class="btn btn-primary">Request</a>
         {% endif %}
-        </p>
-        <p>Admin Access 
+    </p>
+    <p>Admin Access --
         {% if employee.admin == 1 %}
-            Granted <a href="/auth/admin" class="mb-3">Auth Admin Page</a>
+        <a href="/auth/admin" class="btn btn-secondary">Granted - Click for Admin Page</a>
         {% elif employee.admin == 2%}
-            Request Pending
+        <span class="text-secondary">Request Pending</span>
         {% elif employee.admin == 3%}
-            <span class="text-danger">DENIED</span>
+        <span class="text-danger">DENIED</span> contact admin if you feel this is in error
         {% else %}
-            <a href="/auth/{{employee.id}}/2" class="btn btn-primary">Request</a>
+        <a href="/auth/{{employee.id}}/2" class="btn btn-primary">Request</a>
         {% endif %}
-        </p>
-    </div>
+    </p>
+</div>
 {% endblock main %}

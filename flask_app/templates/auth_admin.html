@@ -2,6 +2,9 @@
 {% block title %}Auth Admin{% endblock title %}
 {% block main %}
 <div class="container">
+    {% for message in get_flashed_messages() %}
+        <p class="text-danger">{{message}}</p>
+    {% endfor %}
     <p>Admin Control Panel</p>
     <table class="table-striped table">
         <thead>
@@ -13,37 +16,85 @@
             </tr>
         </thead>
         <tbody>
-            {% for request in all_requests %}
-                <tr>
-                    <td>{{request.requester.email}}</td>
-                    <td>
-                        <ul>
-                            {% if request.requester.admin == 1 %}
-                                <li>Admin</li>
-                            {% endif %}
-                            {% if request.requester.inventory_access == 1 %}
-                                <li>Inventory</li>
-                            {% endif %}
-                            {% if request.requester.sales_access == 1 %}
-                                <li>Sales</li>
-                            {% endif %}
-                        </ul>
-                    </td>
-                    <td>
-                        {% if request.requested_level == 0 %}
-                        Sales
-                        {% elif request.requested_level == 1 %}
-                        Inventory
-                        {% elif request.requested_level == 2 %}
-                        Admin
-                        {% else %}
-                        error loading request
+            {% for request in new_requests %}
+                
+            <tr>
+                <td>{{request.requester.email}}</td>
+                <td>
+                    <ul>
+                        {% if request.requester.admin == 1 %}
+                        <li>Admin</li>
                         {% endif %}
-                    </td>
-                    <td>actions tbd</td>
-                </tr>
+                        {% if request.requester.inventory_access == 1 %}
+                        <li>Inventory</li>
+                        {% endif %}
+                        {% if request.requester.sales_access == 1 %}
+                        <li>Sales</li>
+                        {% endif %}
+                        {% if request.requester.sales_access != 1 and request.requester.admin != 1 and request.requester.inventory_access != 1%}
+                        <li>No access</li>
+                        {% endif %}
+                    </ul>
+                </td>
+                <td>
+                    {% if request.requested_level == 0 %}
+                    Sales
+                    {% elif request.requested_level == 1 %}
+                    Inventory
+                    {% elif request.requested_level == 2 %}
+                    Admin
+                    {% else %}
+                    error loading request
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="/auth/{{request.id}}/grant" class="btn btn-primary">Grant</a>
+                    <a href="/auth/{{request.id}}/deny" class="btn btn-danger">Deny</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <h2>History</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Requester</th>
+                <th>Requested Level</th>
+                <th>Outcome</th>
+                <th>Responder</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in old_requests %}
+            <tr>
+                <td>{{request.requester.email}}</td>
+                <td>
+                    {% if request.requested_level == 0 %}
+                    Sales
+                    {% elif request.requested_level == 1 %}
+                    Inventory
+                    {% elif request.requested_level == 2 %}
+                    Admin
+                    {% else %}
+                    error loading request
+                    {% endif %}
+                </td>
+                <td>
+                    {% if request.status == 0 %}
+                    Denied
+                    {% elif request.status == 1 %}
+                    Granted
+                    {% else %}
+                    error loading request history
+                    {% endif %}
+                </td>
+                <td>{{request.responder.email}}</td>
+            </tr>
+                
             {% endfor %}
         </tbody>
     </table>
 </div>
+
 {% endblock main %}

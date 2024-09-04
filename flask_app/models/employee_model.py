@@ -57,16 +57,7 @@ class Employee:
     
     @classmethod
     def new_auth_request(cls,category,employee_id):
-        attribute = ""
-        print(category)
-        category = int(category)
-        match category:
-            case 0:
-                attribute = "sales_access"
-            case 1:
-                attribute = "inventory_access"
-            case 2:
-                attribute = "admin"
+        attribute = cls.enum_category(category)
         query = """
             UPDATE employees
             SET """ + attribute + """ = 2
@@ -74,6 +65,32 @@ class Employee:
         """
         data = {
             'attribute': attribute,
+            'employee_id': employee_id
+        }
+        return connect_to_mysql(DATABASE).query_db(query,data)
+    
+    @classmethod
+    def grant_auth_request(cls,category,employee_id):
+        attribute = cls.enum_category(category)
+        query = """
+            UPDATE employees
+            SET """ + attribute + """ = 1
+            WHERE id = %(employee_id)s;
+        """
+        data = {
+            'employee_id': employee_id
+        }
+        return connect_to_mysql(DATABASE).query_db(query,data)
+
+    @classmethod
+    def deny_auth_request(cls,category,employee_id):
+        attribute = cls.enum_category(category)
+        query = """
+            UPDATE employees
+            SET """ + attribute + """ = 3
+            WHERE id = %(employee_id)s;
+        """
+        data = {
             'employee_id': employee_id
         }
         return connect_to_mysql(DATABASE).query_db(query,data)
@@ -114,4 +131,15 @@ class Employee:
             flash("Passwords do not match", 'reg_password')
         return is_valid
 
-        
+    @staticmethod
+    def enum_category(category):
+        attribute = ""
+        category = int(category)
+        match category:
+            case 0:
+                attribute = "sales_access"
+            case 1:
+                attribute = "inventory_access"
+            case 2:
+                attribute = "admin"
+        return attribute
