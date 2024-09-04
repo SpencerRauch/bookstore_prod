@@ -20,7 +20,7 @@ def enforce_admin(func): # usage: @enforce_admin above a controller method
         employee = Employee.get_by_id({'id':session['employee_id']})
         if not employee:
             return redirect(url_for("logout"))
-        if not employee.admin:
+        if not employee.admin == 1:
             return redirect(url_for("credentials_error"))
         return func(*args,**kwargs)
     return wrapper
@@ -34,7 +34,7 @@ def enforce_inventory_access(func): # usage: @enforce_admin above a controller m
         employee = Employee.get_by_id({'id':session['employee_id']})
         if not employee:
             return redirect(url_for("logout"))
-        if not employee.inventory_access:
+        if not employee.inventory_access == 1:
             return redirect(url_for("credentials_error"))
         return func(*args,**kwargs)
     return wrapper
@@ -48,7 +48,7 @@ def enforce_sales_access(func): # usage: @enforce_admin above a controller metho
         employee = Employee.get_by_id({'id':session['employee_id']})
         if not employee:
             return redirect(url_for("logout"))
-        if not employee.sales_access:
+        if not employee.sales_access == 1:
             return redirect(url_for("credentials_error"))
         return func(*args,**kwargs)
     return wrapper
