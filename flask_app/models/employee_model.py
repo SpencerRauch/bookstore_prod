@@ -13,7 +13,9 @@ class Employee:
         self.password = data['password']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
-        self.access_level = data['access_level']
+        self.inventory_access = data['inventory_access']
+        self.sales_access = data['sales_access']
+        self.admin = data['admin']
 
 
     @classmethod
