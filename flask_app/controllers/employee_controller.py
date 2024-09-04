@@ -24,6 +24,7 @@ def register_employee():
     }
     employee_id = Employee.create(data) #UUID
     session['employee_id'] = employee_id
+    session['employee_name'] = request.form['first_name'] + " " + request.form['last_name']
     return redirect('/dashboard')
 
 #! Login Logic
@@ -38,12 +39,16 @@ def login_employee():
         flash('Invalid Credentials', 'log')
         return redirect('/')
     session['employee_id'] = potential_employee.id
+    session['employee_name'] = potential_employee.first_name + " " + potential_employee.last_name
     return redirect('/dashboard')
 
 #! Logout Logic
 @app.route('/employees/logout')
 def logout():
-    del session['employee_id']
+    if "employee_id" in session:
+        del session['employee_id']
+    if "employee_name" in session:
+        del session['employee_name']
     # session.clear()
     return redirect('/')
 
