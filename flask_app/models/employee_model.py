@@ -35,27 +35,6 @@ class Employee:
         if results:
             return cls(results[0])
         return False
-
-    # @classmethod
-    # def get_by_id_with_parties(cls,data):
-    #     query = """
-    #         SELECT * FROM employees LEFT JOIN parties ON employees.id = parties.employee_id WHERE employees.id = %(id)s;
-    #     """
-    #     results = connect_to_mysql(DATABASE).query_db(query,data)
-    #     if results:
-    #         employee_instance = cls(results[0])
-    #         for row in results:
-    #             if row['parties.id'] == None:
-    #                 break
-    #             party_data = {
-    #                 **row,
-    #                 'id':row['parties.id'],
-    #                 'created_at':row['parties.created_at'],
-    #                 'updated_at':row['parties.updated_at']
-    #             }
-    #             employee_instance.parties.append(party_model.Party(party_data))
-    #         return employee_instance
-    #     return False
     
     @classmethod
     def get_by_email(cls,data):
@@ -72,33 +51,33 @@ class Employee:
         is_valid = True
         if len(data['first_name']) < 1:
             is_valid = False
-            flash('First name required','reg')
+            flash('First name required','reg_first_name')
         if len(data['last_name']) < 1:
             is_valid = False
-            flash('Last name required','reg')
+            flash('Last name required','reg_last_name')
         if len(data['email']) < 1:
             is_valid = False
-            flash('Email required','reg')
+            flash('Email required','reg_email')
         elif not EMAIL_REGEX.match(data['email']):
             is_valid = False
-            flash('Email must be in valid format','reg')
+            flash('Email must be in valid format','reg_email')
         elif not '@bookstore.com' in data['email']:
             is_valid = False
-            flash('only bookstore.com emails allowed','reg')
+            flash('only bookstore.com emails allowed','reg_email')
         else:
             potential_employee = Employee.get_by_email({'email':data['email']})
             if potential_employee:
                 is_valid = False
-                flash('Email already registered, contact Admin','reg')
+                flash('Email already registered, contact Admin','reg_email')
         if len(data['password']) < 1:
             is_valid = False
-            flash("Please provide password", 'reg')
+            flash("Please provide password", 'reg_password')
         elif len(data['password']) < 8:
             is_valid = False
-            flash("Password must be > 8 char", 'reg')
+            flash("Password must be > 8 char", 'reg_password')
         elif data['password'] != data['confirm_pass']:
             is_valid = False
-            flash("Passwords do not match", 'reg')
+            flash("Passwords do not match", 'reg_password')
         return is_valid
 
         

@@ -5,10 +5,12 @@ from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt(app)
 
+#! Home Page
 @app.route('/')
 def index():
     return render_template('index.html')
 
+#! Register Logic
 @app.route('/employees/register', methods=['post'])
 def register_employee():
     if not Employee.valid_register(request.form):
@@ -24,6 +26,7 @@ def register_employee():
     session['employee_id'] = employee_id
     return redirect('/dashboard')
 
+#! Login Logic
 @app.route('/employees/login',methods=['post'])
 def login_employee():
     potential_employee = Employee.get_by_email(request.form)
@@ -37,12 +40,14 @@ def login_employee():
     session['employee_id'] = potential_employee.id
     return redirect('/dashboard')
 
+#! Logout Logic
 @app.route('/employees/logout')
 def logout():
     del session['employee_id']
     # session.clear()
     return redirect('/')
 
+#! Employee Dashboard Route
 @app.route('/dashboard')
 def dashboard():
     if 'employee_id' not in session:

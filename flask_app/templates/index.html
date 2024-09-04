@@ -19,18 +19,30 @@
                     <div class="mb-3 row">
                         <label for="first_name" class="col-6">First Name</label>
                         <input class="col-6" type="text" name="first_name" id="first_name">
+                        {% for message in get_flashed_messages(category_filter=['reg_first_name'])  %}
+                        <p class="text-danger">{{message}}</p>
+                        {% endfor %}
                     </div>
                     <div class="mb-3 row">
                         <label for="last_name" class="col-6">Last Name</label>
                         <input class="col-6" type="text" name="last_name" id="last_name">
+                        {% for message in get_flashed_messages(category_filter=['reg_last_name'])  %}
+                        <p class="text-danger">{{message}}</p>
+                        {% endfor %}
                     </div>
                     <div class="mb-3 row">
                         <label for="email" class="col-6">Email</label>
                         <input class="col-6" type="text" name="email" id="email">
+                        {% for message in get_flashed_messages(category_filter=['reg_email'])  %}
+                        <p class="text-danger">{{message}}</p>
+                        {% endfor %}
                     </div>
                     <div class="mb-3 row">
                         <label for="password" class="col-6">Password</label>
                         <input class="col-6" type="password" name="password" id="password">
+                        {% for message in get_flashed_messages(category_filter=['reg_password'])  %}
+                        <p class="text-danger">{{message}}</p>
+                        {% endfor %}
                     </div>
                     <div class="mb-3 row">
                         <label for="confirm_pass" class="col-6">Confirm Password</label>
