@@ -9,11 +9,19 @@ REASON CODES:
 0 - physical inventory check
 1 - damaged in warehouse
 2 - damaged in transit
-2 - customer return
-3 - internal use 
+3 - customer return
+4 - internal use 
 """
 
 class Adjustment:
+    reasons = {
+            0:'physical inventory check',
+            1:'damaged in warehouse',
+            2:'damaged in transit',
+            3:'customer return',
+            4:'internal use'
+        }
+    
     def __init__(self,data) -> None:
         self.id = data['id']
         self.quantity = data['quantity']
@@ -28,7 +36,7 @@ class Adjustment:
     def create(cls,data):
         query = """
             INSERT INTO adjustments (quantity, reason, employee_id, stock_item_id)
-            VALUES (%(quantity)s, %(reason)s, %(employee_id)s, %(stock_item_id)s);
+            VALUES (%(adjustment)s, %(reason)s, %(employee_id)s, %(stock_item_id)s);
         """
         return connect_to_mysql(DATABASE).query_db(query,data)
     
@@ -46,9 +54,15 @@ class Adjustment:
     @staticmethod
     def valid_adjustment(data):
         is_valid = True
-        if len(data['quantity']) <1:
+        if len(data['adjustment']) <1:
             flash("quantity required")
             is_valid = False
+        else: 
+            try:
+                int(data['adjustment'])
+            except ValueError:
+                is_valid = False
+                flash("stock level must be an integer")
         if len(data['reason']) <1:
             flash("reason required")
             is_valid = False

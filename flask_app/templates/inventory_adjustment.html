@@ -1,0 +1,48 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Adjustments{% endblock title %}
+{% block main %}
+<div class="container text-center">
+    <h1>{{to_adjust.name}}</h1>
+    <h2>Current stock: <span id="current">{{to_adjust.stock_level}}</span></h2>
+    <form action="/inventory/{{to_adjust.id}}/adjust" method="post" id="adjust_form">
+        <div class="mb-3">
+            <label for="reason">Reason</label>
+            <select name="reason" id="reason">
+                <option value="">-- select --</option>
+                {% for key in reasons %}
+                <option value="{{key}}">{{reasons[key]}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="adjustment">Adjust by </label>
+            <input type="number" name="adjustment" id="adjustment">
+        </div>
+        <p>(use negative values to subtract)</p>
+
+        {% for message in get_flashed_messages() %}
+        <p class="text-danger">{{message}}</p>
+        {% endfor %}
+        <button class="btn btn-warning">Adjust</button>
+    </form>
+</div>
+<script>
+    const form = document.getElementById('adjust_form')
+        .addEventListener('submit', function (e) {
+            let current = parseInt(document.getElementById("current").innerText);
+            let adjust = parseInt(document.getElementById("adjustment").value);
+            let reason = document.getElementById("reason");
+            let submit = true;
+            if (reason.value.length < 1 || adjust == undefined) {
+                submit = false;
+            }
+            if (submit) {
+                let isConfirmed = confirm(`Will adjust by ${adjust} for a new total of ${current + adjust}. A record of this transaction will be made.`);
+                if (!isConfirmed) {
+                    // If user clicked 'Cancel' in the confirmation dialog, prevent form from submitting
+                    e.preventDefault();
+                }
+            }
+        });
+</script>
+{% endblock main %}

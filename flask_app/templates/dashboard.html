@@ -16,11 +16,11 @@
         <tbody>
             {% for ea_item in all_items %}
                 <tr>
-                    <td>ea_item.name</td>
+                    <td>{{ea_item.name}}</td>
                     <td>{{ea_item.stock_level}}</td>
                     <td>{{ea_item.manufacturer.name}}</td>
                     {% if employee.inventory_access == 1 %}
-                    <td><a href="/inventory/{{ea_item.id}}/adjust" class="btn btn-info">Adjust</a></td>
+                    <td><a href="/inventory/{{ea_item.id}}/adjust_form" class="btn btn-info">Adjust</a></td>
                     {% endif %}
                 </tr>
             {% endfor %}

@@ -28,6 +28,16 @@ class StockItem:
         return connect_to_mysql(DATABASE).query_db(query,data)
     
     @classmethod
+    def direct_adjust(cls,data):
+        query = """
+            UPDATE stock_items
+            SET stock_level = stock_level + %(adjustment)s
+            WHERE id = %(id)s;
+        """
+        return connect_to_mysql(DATABASE).query_db(query,data)
+
+    
+    @classmethod
     def get_by_id(cls,data):
         query = """
             SELECT * FROM stock_items WHERE stock_items.id = %(id)s;
@@ -52,19 +62,25 @@ class StockItem:
     @staticmethod
     def valid_stock_item(data):
         is_valid = True
-        potential_item = StockItem.get_by_name({'name':data['name']})
-        if potential_item.manufacturer_id == data['manufacturer_id'] :
-            is_valid = False
-            flash('item by that name exists for manufacturer')
+        # potential_item = StockItem.get_by_name({'name':data['name']})
+        # if potential_item.manufacturer_id == data['manufacturer_id'] :
+        #     is_valid = False
+        #     flash('item by that name exists for manufacturer')
         if len(data['name']) <1:
             flash("name required")
             is_valid = False
         if len(data['stock_level']) <1:
             flash("stock_level required")
             is_valid = False
-
-        if len(data['stock_level']) < 0:
+        val = None
+        try:
+            val = int(data['stock_level'])
+        except ValueError:
             is_valid = False
-            flash('stock level cannot be negative')
+            flash("stock level must be an integer")
+        if val:
+            if val < 0:
+                is_valid = False
+                flash("stock level must initially 0 or positive")
         return is_valid
 
