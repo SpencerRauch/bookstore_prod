@@ -56,3 +56,29 @@ def clear_manu_form():
     session.pop('state',None)
     session.pop('zip',None)
     return redirect('/manufacturers/new')
+
+@app.route('/manufacturers/<int:id>/edit')
+@enforce_inventory_access
+def edit_manufacturer(id):
+    to_edit = Manufacturer.get_by_id({"id":id})
+    state_codes = Address.state_codes
+    return render_template("manufacturer_edit.html",to_edit=to_edit,state_codes=state_codes)
+
+@app.route('/manufacturers/<int:id>/update', methods=['POST'])
+@enforce_inventory_access
+def update_manufacturer(id):
+    valid = True
+    if not Address.valid_address(request.form):
+        valid = False
+    if not Manufacturer.valid_manufacturer(request.form):
+        valid = False
+    if not valid:
+        return redirect(f'/manufacturers/{id}/edit')
+    Address.update(request.form)
+    data = {
+        'name':request.form['name'],
+        'id': id
+    }
+    Manufacturer.update(data)
+    
+    return redirect('/manufacturers')   

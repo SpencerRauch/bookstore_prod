@@ -26,6 +26,13 @@ class Manufacturer:
         return connect_to_mysql(DATABASE).query_db(query,data)
     
     @classmethod
+    def update(cls,data):
+        query = """ 
+            UPDATE manufacturers SET name = %(name)s WHERE id = %(id)s;
+        """
+        return connect_to_mysql(DATABASE).query_db(query,data)
+    
+    @classmethod
     def get_all(cls):
         query = """
             SELECT * FROM manufacturers
@@ -64,9 +71,9 @@ class Manufacturer:
         if len(data['name']) < 1:
             is_valid = False
             flash('Name required')
-        potential_manufacturer = Manufacturer.get_by_name({'name':data['name']})
-        if potential_manufacturer:
-            is_valid = False
-            flash('Manufacturer exists by that name')
+        # potential_manufacturer = Manufacturer.get_by_name({'name':data['name']})
+        # if potential_manufacturer:
+        #     is_valid = False
+        #     flash('Manufacturer exists by that name')
         return is_valid
 

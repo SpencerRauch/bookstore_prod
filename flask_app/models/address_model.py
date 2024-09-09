@@ -46,6 +46,18 @@ class Address:
             return cls(results[0])
         return False
     
+    @classmethod
+    def update(cls,data):
+        query = """
+            UPDATE addresses
+            SET city = %(city)s,
+            state = %(state)s,
+            street = %(street)s,
+            zip = %(zip)s
+            WHERE id = %(address_id)s;
+        """
+        return connect_to_mysql(DATABASE).query_db(query,data)
+    
     @staticmethod
     def valid_address(data):
         is_valid = True
