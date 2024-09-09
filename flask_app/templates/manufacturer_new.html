@@ -1,0 +1,38 @@
+{% extends 'nav_bar.html' %}
+{% block title %}New Manufacturer{% endblock title %}
+{% block main %}
+    <div class="container text-center">
+    <h1>New Manufacturer</h1>
+    <form action="/manufacturers/create" method="post">
+        <div class="mb-3">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" value="{{session.name}}">
+        </div>
+        <div class="mb-3">
+            <label for="street">Street</label>
+            <input type="text" name="street" id="street" value="{{session.street}}">
+        </div>
+        <div class="mb-3">
+            <label for="city">City</label>
+            <input type="text" name="city" id="city" value="{{session.city}}">
+        </div>
+        <div class="mb-3">
+            <label for="state">State</label>
+            <select name="state" id="state">
+                <option value="">-- select -- </option>
+                {% for state_code in state_codes %}
+                <option value="{{state_code}}">{{state_code}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="zip">Zip</label>
+            <input type="text" name="zip" id="zip" value="{{session.zip}}">
+        </div>
+        <button class="btn btn-primary">Add</button>
+        {% for message in get_flashed_messages() %}
+            <p class="text-danger">{{message}}</p>
+        {% endfor %}
+    </form>
+    </div>
+{% endblock main %}

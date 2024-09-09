@@ -7,6 +7,7 @@ EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
 
 
 class Address:
+    state_codes = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
     def __init__(self,data) -> None:
         self.id = data['id']
         self.street = data['street']
@@ -57,10 +58,13 @@ class Address:
         if len(data['state']) <1:
             flash("state required")
             is_valid = False
+        elif len(data['state']) > 2:
+            flash("please use 2 letter state code")
+            is_valid = False
         if len(data['zip']) <1:
             flash("zip required")
             is_valid = False
-        elif len(data['zip']) > 5:
+        elif len(data['zip']) != 5:
             flash("please use 5 digit zip")
             is_valid = False
         return is_valid

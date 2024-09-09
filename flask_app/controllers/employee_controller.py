@@ -53,13 +53,6 @@ def logout():
     # session.clear()
     return redirect('/')
 
-#! Employee Dashboard Route
-@app.route('/dashboard')
-@enforce_login
-def dashboard():
-    employee = Employee.get_by_id({'id':session['employee_id']})
-    return render_template('dashboard.html', employee=employee)
-
 #! Credentials error page
 @app.route("/employees/credentials_error")
 @enforce_login

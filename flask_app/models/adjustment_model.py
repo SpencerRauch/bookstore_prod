@@ -4,7 +4,14 @@ from flask import flash
 import re
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
 
-
+"""
+REASON CODES:
+0 - physical inventory check
+1 - damaged in warehouse
+2 - damaged in transit
+2 - customer return
+3 - internal use 
+"""
 
 class Adjustment:
     def __init__(self,data) -> None:

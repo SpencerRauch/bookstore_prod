@@ -1,0 +1,29 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Manufacturers{% endblock title %}
+{% block main %}
+    <div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>State</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ea_manufacturer in all_manufacturers %}
+                <tr>
+                    <td>{{ea_manufacturer.id}}</td>
+                    <td>{{ea_manufacturer.name}}</td>
+                    <td>{{ea_manufacturer.address.state}}</td>
+                    <td><a href="/manufacturers/{{ea_manufacturer.id}}/edit" class="btn btn-info">Adjust</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-left gap-3">
+        <a href="/manufacturers/new" class="btn btn-info">New Manufacturer</a>
+    </div>
+    </div>
+{% endblock main %}

@@ -1,7 +1,36 @@
 {% extends 'nav_bar.html' %}
 {% block title %}Dashboard{% endblock title %}
 {% block main %}
-    <div class="container text-center">
-        <h1>Welcome, {{employee.first_name}}</h1>
+    <div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Stock Quantity</th>
+                <th>Manufacturer</th>
+                {% if employee.inventory_access == 1 %}
+                <th>Action</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for ea_item in all_items %}
+                <tr>
+                    <td>ea_item.name</td>
+                    <td>{{ea_item.stock_level}}</td>
+                    <td>{{ea_item.manufacturer.name}}</td>
+                    {% if employee.inventory_access == 1 %}
+                    <td><a href="/inventory/{{ea_item.id}}/adjust" class="btn btn-info">Adjust</a></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if employee.inventory_access == 1 %}
+    <div class="d-flex justify-content-left gap-3">
+        <a href="/inventory/new" class="btn btn-info">New Stock Item</a>
+        <a href="/manufacturers" class="btn btn-info">Manage Manufacturers</a>
+    </div>
+    {% endif %}
     </div>
 {% endblock main %}

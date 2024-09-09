@@ -1,19 +1,22 @@
 from flask_app.config.mysqlconfig import connect_to_mysql
 from flask_app import DATABASE
 from flask import flash
+from flask_app.models import manufacturer_model
 import re
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
 
 
 
 class StockItem:
-    def __init__(self,data) -> None:
+    def __init__(self,data, with_manufacturer=False) -> None:
         self.id = data['id']
         self.name = data['name']
         self.stock_level = data['stock_level']
         self.manufacturer_id = data['manufacturer_id']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
+        if with_manufacturer:
+            self.manufacturer = manufacturer_model.Manufacturer.get_by_id({'id':self.manufacturer_id})
 
 
     @classmethod
@@ -35,14 +38,16 @@ class StockItem:
         return False
     
     @classmethod
-    def get_by_name(cls,data):
+    def get_all_with_manufacturer(cls):
         query = """
-            SELECT * FROM stock_items WHERE stock_items.name = %(name)s;
+            SELECT * FROM stock_items 
+            JOIN manufacturers ON stock_items.manufacturer_id = manufacturers.id;
         """
-        results = connect_to_mysql(DATABASE).query_db(query,data)
-        if results:
-            return cls(results[0])
-        return False
+        results = connect_to_mysql(DATABASE).query_db(query)
+        all_items = []
+        for row in results:
+            all_items.append(cls(row, True))
+        return all_items
     
     @staticmethod
     def valid_stock_item(data):
