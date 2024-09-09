@@ -21,7 +21,7 @@
             <select name="state" id="state">
                 <option value="">-- select -- </option>
                 {% for state_code in state_codes %}
-                <option value="{{state_code}}">{{state_code}}</option>
+                <option {% if session.state == state_code %}selected{% endif %} value="{{state_code}}">{{state_code}}</option>
                 {% endfor %}
             </select>
         </div>
@@ -29,10 +29,11 @@
             <label for="zip">Zip</label>
             <input type="text" name="zip" id="zip" value="{{session.zip}}">
         </div>
-        <button class="btn btn-primary">Add</button>
+        <button class="btn btn-primary mb-3">Add</button>
         {% for message in get_flashed_messages() %}
             <p class="text-danger">{{message}}</p>
         {% endfor %}
     </form>
+    <a href="/manufacturers/clear_form" class="btn btn-secondary">Clear</a>
     </div>
 {% endblock main %}

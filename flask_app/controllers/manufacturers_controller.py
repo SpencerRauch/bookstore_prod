@@ -46,3 +46,13 @@ def create_manufacturer():
     session.pop('state',None)
     session.pop('zip',None)
     return redirect('/manufacturers')
+
+@app.route('/manufacturers/clear_form')
+@enforce_inventory_access
+def clear_manu_form():
+    session.pop('name',None)
+    session.pop('city',None)
+    session.pop('street',None)
+    session.pop('state',None)
+    session.pop('zip',None)
+    return redirect('/manufacturers/new')
