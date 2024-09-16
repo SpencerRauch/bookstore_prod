@@ -27,18 +27,21 @@
                     <td>
                         <a href="/sales/{{ea_order.id}}/cancel" class="btn btn-danger">Cancel</a> |
                         <a href="/sales/{{ea_order.id}}/ship" class="btn btn-primary">Ship</a> 
+
                     </td>
-                    {% endif %}
-                    {% if employee.sales_access == 1 and ea_order.status == 0 %}
+                    {% elif employee.sales_access == 1 and ea_order.status == 0 %}
                     <td>
                         <a href="/sales/{{ea_order.id}}/edit" class="btn btn-danger">Cancel</a> |
-                        <a href="/sales/{{ea_order.id}}/finalize" class="btn btn-danger">Finalize</a> 
+                        <a href="/sales/{{ea_order.id}}/finalize" class="btn btn-danger">Finalize</a> |
+                        <a href="/sales/{{ea_order.id}}/edit" class="btn btn-info">Edit</a>
+
                     </td>
-                    {% endif %}
-                    {% if ea_order.status == 2 %}
+                    {% elif ea_order.status == 2 %}
                     <td>
                         <a href="/sales/{{ea_order.id}}/view" class="btn btn-danger">View</a> |
                     </td>
+                    {% else %}
+                    <td> No actions available</td>
                     {% endif %}
                     
                 </tr>

@@ -41,15 +41,19 @@ class SaleLineItem:
         return connect_to_mysql(DATABASE).query_db(query,data)
     
     @classmethod
-    def get_all_for_order(cls):
+    def get_all_for_order(cls, data):
         query = """
             SELECT * FROM sale_line_items
+            JOIN stock_items
+            ON stock_items.id = stock_item_id
             WHERE sales_order_id = %(id)s;
         """
-        results = connect_to_mysql(DATABASE).query_db(query)
+        results = connect_to_mysql(DATABASE).query_db(query,data)
         all_items = []
         for row in results:
-            all_items.append(cls(row))
+            one_item = cls(row)
+            one_item.stock_item = row['name']
+            all_items.append(one_item)
         return all_items
         
     
@@ -67,18 +71,19 @@ class SaleLineItem:
     @staticmethod
     def valid_sale_line_item(data):
         is_valid = True
-        if len(data['quantity']) < 1:
+        if len(data['ordered_quantity']) < 1:
             is_valid = False
             flash('Quantity required')
         if len(data['stock_item_id']) < 1:
             is_valid = False
             flash('Item required')
-        potential_stock_item = stockitem_model.StockItem.get_by_id({'id':data['stock_item_id']})
-        if not potential_stock_item:
-            is_valid = False
-            flash('item not found')
+        else:
+            potential_stock_item = stockitem_model.StockItem.get_by_id({'id':data['stock_item_id']})
+            if not potential_stock_item:
+                    is_valid = False
+                    flash('item not found')
         try:
-            int_qty = int(data['quantity'])
+            int_qty = int(data['ordered_quantity'])
             if int_qty < 0:
                 flash("quantiy must be positive")
                 is_valid = False

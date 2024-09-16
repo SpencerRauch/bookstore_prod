@@ -16,13 +16,17 @@ class SalesOrder:
         3: 'cancelled'
     }
     
-    def __init__(self,data) -> None:
+    def __init__(self,data,with_items=False, with_customer=False) -> None:
         self.id = data['id']
         self.status = data['status']
         self.employee_id = data['employee_id']
         self.customer_id = data['customer_id']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
+        if with_customer:
+            self.customer = customer_model.Customer.get_by_id({'id':self.customer_id})
+        if with_items:
+            self.items = sale_line_item_model.SaleLineItem.get_all_for_order({'id':self.id})
 
 
 
@@ -70,7 +74,7 @@ class SalesOrder:
         """
         results = connect_to_mysql(DATABASE).query_db(query,data)
         if results:
-            return cls(results[0])
+            return cls(results[0], True, True)
         return False
     
     @classmethod
@@ -86,9 +90,9 @@ class SalesOrder:
     @staticmethod
     def valid_sale_order(data):
         is_valid = True
-        if len(data['name']) < 1:
+        if len(data['customer_id']) < 1:
             is_valid = False
-            flash('Name required')
+            flash('Customer required')
         # potential_sale_order = Manufacturer.get_by_name({'name':data['name']})
         # if potential_sale_order:
         #     is_valid = False
