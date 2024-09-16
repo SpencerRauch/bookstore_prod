@@ -1,37 +1,37 @@
 {% extends 'nav_bar.html' %}
-{% block title %}Edit Manufacturer{% endblock title %}
+{% block title %}New Customer{% endblock title %}
 {% block main %}
     <div class="container text-center">
-        <h1>Edit Manufacturer</h1>
-    <form action="/manufacturers/{{to_edit.id}}//update" method="post">
+        <h1>New Customer</h1>
+        <a href="/customers/clear_form" class="btn btn-secondary mb-3">Clear</a>
+    <form action="/customers/create" method="post">
         <div class="mb-3">
             <label for="name">Name</label>
-            <input type="text" name="name" id="name" value="{{to_edit.name}}">
+            <input type="text" name="name" id="name" value="{{session.name}}">
         </div>
         <div class="mb-3">
             <label for="street">Street</label>
-            <input type="text" name="street" id="street" value="{{to_edit.address.street}}">
+            <input type="text" name="street" id="street" value="{{session.street}}">
         </div>
         <div class="mb-3">
             <label for="city">City</label>
-            <input type="text" name="city" id="city" value="{{to_edit.address.city}}">
+            <input type="text" name="city" id="city" value="{{session.city}}">
         </div>
         <div class="mb-3">
             <label for="state">State</label>
             <select name="state" id="state">
                 <option value="">-- select -- </option>
                 {% for state_code in state_codes %}
-                <option {% if to_edit.address.state == state_code %}selected{% endif %} value="{{state_code}}">{{state_code}}</option>
+                <option {% if session.state == state_code %}selected{% endif %} value="{{state_code}}">{{state_code}}</option>
                 {% endfor %}
             </select>
         </div>
         <div class="mb-3">
             <label for="zip">Zip</label>
-            <input type="text" name="zip" id="zip" value="{{to_edit.address.zip}}">
+            <input type="text" name="zip" id="zip" value="{{session.zip}}">
         </div>
-        <input type="hidden" name="address_id" value="{{to_edit.address_id}}">
-        <button class="btn btn-primary mb-3">Update</button>
-        <a href="/manufacturers" class="btn btn-danger mb-3">Cancel</a>
+        <button class="btn btn-primary mb-3">Add</button>
+        <a href="/customers" class="btn btn-danger mb-3">Cancel</a>
         {% for message in get_flashed_messages() %}
             <p class="text-danger">{{message}}</p>
         {% endfor %}

@@ -1,0 +1,29 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Customers{% endblock title %}
+{% block main %}
+    <div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>State</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ea_customer in all_customers %}
+                <tr>
+                    <td>{{ea_customer.id}}</td>
+                    <td>{{ea_customer.name}}</td>
+                    <td>{{ea_customer.address.state}}</td>
+                    <td><a href="/customers/{{ea_customer.id}}/edit" class="btn btn-info">Edit</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-left gap-3">
+        <a href="/customers/new" class="btn btn-info">New Customer</a>
+    </div>
+    </div>
+{% endblock main %}

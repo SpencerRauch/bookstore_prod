@@ -1,0 +1,49 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Dashboard{% endblock title %}
+{% block main %}
+    <div class="container">
+        {% if employee.sales_access == 1 %}
+        <div class="d-flex justify-content-left gap-3">
+            <a href="/sales/new" class="btn btn-info">New Sales Order</a>
+            <a href="/customers" class="btn btn-info">Manage Customers</a>
+        </div>
+        {% endif %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ea_order in all_orders %}
+                <tr>
+                    <td>{{ea_order.id}}</td>
+                    <td>{{ea_order.customer.name}}</td>
+                    <td>{{statuses[ea_order.status]}}</td>
+                    {% if employee.inventory_access == 1 and ea_order.status == 1 %}
+                    <td>
+                        <a href="/sales/{{ea_order.id}}/cancel" class="btn btn-danger">Cancel</a> |
+                        <a href="/sales/{{ea_order.id}}/ship" class="btn btn-primary">Ship</a> 
+                    </td>
+                    {% endif %}
+                    {% if employee.sales_access == 1 and ea_order.status == 0 %}
+                    <td>
+                        <a href="/sales/{{ea_order.id}}/edit" class="btn btn-danger">Cancel</a> |
+                        <a href="/sales/{{ea_order.id}}/finalize" class="btn btn-danger">Finalize</a> 
+                    </td>
+                    {% endif %}
+                    {% if ea_order.status == 2 %}
+                    <td>
+                        <a href="/sales/{{ea_order.id}}/view" class="btn btn-danger">View</a> |
+                    </td>
+                    {% endif %}
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock main %}

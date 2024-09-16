@@ -1,6 +1,7 @@
 from flask_app.config.mysqlconfig import connect_to_mysql
 from flask_app import DATABASE
-from flask_app.models import address_model
+from flask_app.models import sale_line_item_model
+from flask_app.models import customer_model
 from flask import flash
 import re
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
@@ -41,14 +42,24 @@ class SalesOrder:
         return connect_to_mysql(DATABASE).query_db(query,data)
     
     @classmethod
-    def get_all(cls):
+    def get_all_with_customer(cls):
         query = """
-            SELECT * FROM sale_orders;
+            SELECT * FROM sale_orders
+            JOIN customers
+            ON customer_id = customers.id;
         """
         results = connect_to_mysql(DATABASE).query_db(query)
         all_items = []
         for row in results:
-            all_items.append(cls(row))
+            one_order = cls(row)
+            cust_data = {
+                **row,
+                'id': row['customers.id'],
+                'created_at':row['customers.created_at'],
+                'updated_at':row['customers.updated_at']
+            }
+            one_order.customer = customer_model.Customer(cust_data)
+            all_items.append(one_order)
         return all_items
         
     
