@@ -82,3 +82,15 @@ def adjust_ordered(order_id,line_id):
 def remove_order_line(order_id,line_id):
     SaleLineItem.delete({"id":line_id})
     return redirect(f"/sales/{order_id}/edit")
+
+@app.route('/sales/<int:id>/finalize')
+@enforce_sales_access
+def finalize_sales_order(id):
+    SalesOrder.update_status({'id':id,'status':1})
+    return redirect('/sales')
+
+@app.route('/sales/<int:id>/cancel')
+@enforce_sales_or_inventory
+def cancel_sales_order(id):
+    SalesOrder.update_status({'id':id,'status':3})
+    return redirect('/sales')

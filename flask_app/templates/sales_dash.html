@@ -23,25 +23,20 @@
                     <td>{{ea_order.id}}</td>
                     <td>{{ea_order.customer.name}}</td>
                     <td>{{statuses[ea_order.status]}}</td>
-                    {% if employee.inventory_access == 1 and ea_order.status == 1 %}
                     <td>
-                        <a href="/sales/{{ea_order.id}}/cancel" class="btn btn-danger">Cancel</a> |
-                        <a href="/sales/{{ea_order.id}}/ship" class="btn btn-primary">Ship</a> 
-
-                    </td>
-                    {% elif employee.sales_access == 1 and ea_order.status == 0 %}
-                    <td>
-                        <a href="/sales/{{ea_order.id}}/edit" class="btn btn-danger">Cancel</a> |
-                        <a href="/sales/{{ea_order.id}}/finalize" class="btn btn-danger">Finalize</a> |
-                        <a href="/sales/{{ea_order.id}}/edit" class="btn btn-info">Edit</a>
-
-                    </td>
+                        <a href="/sales/{{ea_order.id}}/view" class="btn btn-info">View</a> 
+                    {% if employee.sales_access == 1 %}
+                        {% if ea_order.status == 0 %}
+                        <a href="/sales/{{ea_order.id}}/edit" class="btn btn-primary">Edit</a>    
+                        <a href="/sales/{{ea_order.id}}/finalize" class="btn btn-danger">Finalize</a> 
+                        {% endif %}
+                        {% if ea_order.status == 1 or ea_order.status == 0%}
+                            <a href="/sales/{{ea_order.id}}/cancel" class="btn btn-danger">Cancel</a> 
+                        {% endif %}
                     {% elif ea_order.status == 2 %}
-                    <td>
-                        <a href="/sales/{{ea_order.id}}/view" class="btn btn-danger">View</a> |
-                    </td>
-                    {% else %}
-                    <td> No actions available</td>
+                    {% endif %}
+                    {% if employee.inventory_access == 1 and ea_order.status == 1 %}
+                        <a href="/sales/{{ea_order.id}}/ship" class="btn btn-primary">Ship</a> 
                     {% endif %}
                     
                 </tr>

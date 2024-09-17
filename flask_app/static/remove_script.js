@@ -5,3 +5,17 @@ function removeHandler(e, item) {
         e.preventDefault()
     }
 }
+
+function finalizeHandler(e){
+    let confirmed = confirm(`Are you sure you want to mark this order as ready to pick?`)
+    if (!confirmed){
+        e.preventDefault()
+    }    
+}
+
+function cancelHandler(e){
+    let confirmed = confirm(`Are you sure you want to cancel this order?`)
+    if (!confirmed){
+        e.preventDefault()
+    }        
+}
