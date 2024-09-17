@@ -58,3 +58,27 @@ def sales_order_add(id):
     SaleLineItem.create(line_item_data)
     return redirect(f"/sales/{id}/edit")
     
+@app.route('/sales/<int:order_id>/adjust_order_line/<int:line_id>', methods=['POST'])
+@enforce_sales_access
+def adjust_ordered(order_id,line_id):
+    data = {
+        **request.form,
+        'id':line_id
+    }
+    try:
+        val = int(request.form['ordered_quantity'])
+        if val <= 0:
+            flash("quantity must be positive. Use remove button to delete from order","qty"+str(line_id))
+            return redirect(f"/sales/{order_id}/edit")
+    except ValueError:
+            flash("quantity must be numerical. Use remove button to delete from order", "qty"+str(line_id))
+            return redirect(f"/sales/{order_id}/edit")
+
+    SaleLineItem.update_ordered(data)
+    return redirect(f"/sales/{order_id}/edit")
+
+@app.route('/sales/<int:order_id>/remove_order_line/<int:line_id>', methods=['POST'])
+@enforce_sales_access
+def remove_order_line(order_id,line_id):
+    SaleLineItem.delete({"id":line_id})
+    return redirect(f"/sales/{order_id}/edit")

@@ -41,6 +41,13 @@ class SaleLineItem:
         return connect_to_mysql(DATABASE).query_db(query,data)
     
     @classmethod
+    def delete(cls,data):
+        query = """
+            DELETE FROM sale_line_items WHERE id = %(id)s;
+        """
+        return connect_to_mysql(DATABASE).query_db(query,data)
+
+    @classmethod
     def get_all_for_order(cls, data):
         query = """
             SELECT * FROM sale_line_items
@@ -73,22 +80,22 @@ class SaleLineItem:
         is_valid = True
         if len(data['ordered_quantity']) < 1:
             is_valid = False
-            flash('Quantity required')
+            flash('Quantity required','new_line')
         if len(data['stock_item_id']) < 1:
             is_valid = False
-            flash('Item required')
+            flash('Item required','new_line')
         else:
             potential_stock_item = stockitem_model.StockItem.get_by_id({'id':data['stock_item_id']})
             if not potential_stock_item:
                     is_valid = False
-                    flash('item not found')
+                    flash('item not found','new_line')
         try:
             int_qty = int(data['ordered_quantity'])
             if int_qty < 0:
-                flash("quantiy must be positive")
+                flash("quantiy must be positive",'new_line')
                 is_valid = False
         except ValueError:
-            flash("quantity should be numerical and positive")
+            flash("quantity should be numerical and positive",'new_line')
             is_valid = False
         return is_valid
 
