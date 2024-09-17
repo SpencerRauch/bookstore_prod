@@ -30,10 +30,10 @@
                     {% if employee.sales_access == 1 %}
                         {% if ea_order.status == 0 %}
                         <a href="/sales/{{ea_order.id}}/edit" class="btn btn-primary">Edit</a>    
-                        <a href="/sales/{{ea_order.id}}/finalize" class="btn btn-danger">Finalize</a> 
+                        <a href="/sales/{{ea_order.id}}/finalize" class="btn btn-danger" onclick="finalizeHandler(event)">Finalize</a> 
                         {% endif %}
                         {% if ea_order.status == 1 or ea_order.status == 0%}
-                            <a href="/sales/{{ea_order.id}}/cancel" class="btn btn-danger">Cancel</a> 
+                            <a href="/sales/{{ea_order.id}}/cancel" class="btn btn-danger" onclick="cancelHandler(event)">Cancel</a> 
                         {% endif %}
                     {% endif %}
                     {% if employee.inventory_access == 1 and ea_order.status == 1 %}
@@ -45,4 +45,5 @@
         </tbody>
     </table>
     </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='remove_script.js') }}"></script>
 {% endblock main %}
