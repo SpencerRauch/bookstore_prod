@@ -48,9 +48,12 @@ class SalesOrder:
     @classmethod
     def get_all_with_customer(cls):
         query = """
-            SELECT * FROM sale_orders
+            SELECT sale_orders.*, customers.*, COUNT(sale_line_items.id) as item_count FROM sale_orders
             JOIN customers
-            ON customer_id = customers.id;
+            ON customer_id = customers.id
+            LEFT JOIN sale_line_items
+            ON sale_line_items.sales_order_id = sale_orders.id
+            GROUP BY sale_orders.id;
         """
         results = connect_to_mysql(DATABASE).query_db(query)
         all_items = []
@@ -63,6 +66,7 @@ class SalesOrder:
                 'updated_at':row['customers.updated_at']
             }
             one_order.customer = customer_model.Customer(cust_data)
+            one_order.item_count = row['item_count']
             all_items.append(one_order)
         return all_items
         

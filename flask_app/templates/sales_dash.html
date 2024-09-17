@@ -14,6 +14,7 @@
                 <th>Order</th>
                 <th>Customer</th>
                 <th>Status</th>
+                <th>Lines</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -23,6 +24,7 @@
                     <td>{{ea_order.id}}</td>
                     <td>{{ea_order.customer.name}}</td>
                     <td>{{statuses[ea_order.status]}}</td>
+                    <td>{{ea_order.item_count}}</td>
                     <td>
                         <a href="/sales/{{ea_order.id}}/view" class="btn btn-info">View</a> 
                     {% if employee.sales_access == 1 %}
@@ -33,12 +35,11 @@
                         {% if ea_order.status == 1 or ea_order.status == 0%}
                             <a href="/sales/{{ea_order.id}}/cancel" class="btn btn-danger">Cancel</a> 
                         {% endif %}
-                    {% elif ea_order.status == 2 %}
                     {% endif %}
                     {% if employee.inventory_access == 1 and ea_order.status == 1 %}
                         <a href="/sales/{{ea_order.id}}/ship" class="btn btn-primary">Ship</a> 
                     {% endif %}
-                    
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>
