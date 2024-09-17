@@ -94,3 +94,10 @@ def finalize_sales_order(id):
 def cancel_sales_order(id):
     SalesOrder.update_status({'id':id,'status':3})
     return redirect('/sales')
+
+@app.route('/sales/<int:id>/view')
+@enforce_sales_or_inventory
+def view_only_sales(id):
+    one_order = SalesOrder.get_by_id({"id":id})
+    statuses = SalesOrder.statuses
+    return render_template("sales_view.html",one_order=one_order, statuses=statuses)

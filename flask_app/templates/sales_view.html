@@ -1,0 +1,29 @@
+{% extends 'nav_bar.html' %}
+{% block title %}View Sales Order{% endblock title %}
+{% block main %}
+    <div class="container text-center">
+        <h1>Viewing Order Number {{one_order.id}}</h1>
+        <h3>Customer: {{one_order.customer.name}}</h3>
+        <h3>Status: {{statuses[one_order.status]}}</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Ordered</th>
+                    <th>Shipped</th>
+                    <th>Not Shipped</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in one_order.items %}
+                    <tr>
+                        <td>{{item.stock_item}}</td>
+                        <td>{{item.ordered_quantity}}</td>
+                        <td>{{item.shipped_quantity}}</td>
+                        <td>{{item.ordered_quantity - item.shipped_quantity}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock main %}
