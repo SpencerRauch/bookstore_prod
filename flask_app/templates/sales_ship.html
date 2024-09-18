@@ -5,6 +5,9 @@
         <h1>Shipping Order Number {{one_order.id}}</h1>
         <h3>Customer: {{one_order.customer.name}}</h3>
         <h3>Status: {{statuses[one_order.status]}}</h3>
+        {% for message in get_flashed_messages(category_filter=['ship_final']) %}
+        <p class="text-danger">{{message}}</p>
+        {% endfor %}
         <table class="table table-striped">
             <thead>
                 <tr>

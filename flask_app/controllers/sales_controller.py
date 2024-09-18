@@ -117,7 +117,8 @@ def shipping_reconciliation(id):
 @enforce_inventory_access
 def finalize_shipping(id):
     lines = SaleLineItem.get_all_for_order({'id':id})
-    StockItem.ship_lines(lines)
+    if not StockItem.ship_lines(lines):
+        return redirect(f"/sales/{id}/ship")
     SalesOrder.update_status({'id':id,'status':2})
     return redirect('/sales')
 
