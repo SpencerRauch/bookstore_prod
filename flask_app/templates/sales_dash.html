@@ -8,6 +8,9 @@
             <a href="/customers" class="btn btn-info">Manage Customers</a>
         </div>
         {% endif %}
+        {% for message in get_flashed_messages(category_filter=['edit_err']) %}
+            <p class="text-danger">{{message}}</p>
+        {% endfor %}
     <table class="table table-striped">
         <thead>
             <tr>

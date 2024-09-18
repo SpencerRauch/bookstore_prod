@@ -43,6 +43,9 @@ def sales_order_create():
 @enforce_sales_access
 def sales_order_edit(id):
     to_edit = SalesOrder.get_by_id({'id':id})
+    if to_edit.status != 0:
+        flash("Order cannot be edited, only orders with a status of entering may be edited","edit_err")
+        return redirect('/sales')
     all_items = StockItem.get_all_with_manufacturer()
     return render_template("sales_edit.html", to_edit=to_edit, all_items=all_items)
 
@@ -102,3 +105,10 @@ def view_only_sales(id):
     one_order = SalesOrder.get_by_id({"id":id})
     statuses = SalesOrder.statuses
     return render_template("sales_view.html",one_order=one_order, statuses=statuses)
+
+@app.route('/sales/<int:id>/ship')
+@enforce_sales_or_inventory
+def shipping_sales(id):
+    one_order = SalesOrder.get_by_id({"id":id})
+    statuses = SalesOrder.statuses
+    return render_template("sales_ship.html",one_order=one_order, statuses=statuses)
