@@ -13,6 +13,7 @@ from flask_app.controllers import enforce_login, enforce_admin, enforce_inventor
 @app.route('/sales')
 @enforce_sales_or_inventory
 def sales_dash():
+
     context = {
         'all_orders' : SalesOrder.get_all_with_customer(),
         'statuses' : SalesOrder.statuses,

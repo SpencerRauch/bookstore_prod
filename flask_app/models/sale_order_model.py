@@ -53,7 +53,8 @@ class SalesOrder:
             ON customer_id = customers.id
             LEFT JOIN sale_line_items
             ON sale_line_items.sales_order_id = sale_orders.id
-            GROUP BY sale_orders.id;
+            GROUP BY sale_orders.id
+            ORDER BY sale_orders.id DESC;
         """
         results = connect_to_mysql(DATABASE).query_db(query)
         all_items = []
