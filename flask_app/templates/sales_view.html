@@ -12,6 +12,7 @@
                     <th>Ordered</th>
                     <th>Shipped</th>
                     <th>Not Shipped</th>
+                    <th>On Hand</th>
                 </tr>
             </thead>
             <tbody>
@@ -21,6 +22,7 @@
                         <td>{{item.ordered_quantity}}</td>
                         <td>{{item.shipped_quantity}}</td>
                         <td>{{item.ordered_quantity - item.shipped_quantity}}</td>
+                        <td>{{item.on_hand}}</td>
                     </tr>
                 {% endfor %}
             </tbody>

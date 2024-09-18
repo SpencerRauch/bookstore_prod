@@ -60,6 +60,7 @@ class SaleLineItem:
         for row in results:
             one_item = cls(row)
             one_item.stock_item = row['name']
+            one_item.on_hand = row['stock_level']
             all_items.append(one_item)
         return all_items
         
