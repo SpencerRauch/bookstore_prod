@@ -107,8 +107,39 @@ def view_only_sales(id):
     return render_template("sales_view.html",one_order=one_order, statuses=statuses)
 
 @app.route('/sales/<int:id>/ship')
-@enforce_sales_or_inventory
-def shipping_sales(id):
+@enforce_inventory_access
+def shipping_reconciliation(id):
     one_order = SalesOrder.get_by_id({"id":id})
     statuses = SalesOrder.statuses
     return render_template("sales_ship.html",one_order=one_order, statuses=statuses)
+
+@app.route('/sales/<int:id>/ship_final')
+@enforce_inventory_access
+def finalize_shipping(id):
+    lines = SaleLineItem.get_all_for_order({'id':id})
+    StockItem.ship_lines(lines)
+    SalesOrder.update_status({'id':id,'status':2})
+    return redirect('/sales')
+
+@app.route('/sales/<int:order_id>/ship_order_line/<int:line_id>', methods=['POST'])
+@enforce_inventory_access
+def ship_ordered(order_id,line_id):
+    data = {
+        **request.form,
+        'id':line_id
+    }
+    try:
+        val = int(request.form['shipped_quantity'])
+        if val < 0:
+            flash("quantity must be positive.","qty"+str(line_id))
+            return redirect(f"/sales/{order_id}/ship")
+        current_stock = SaleLineItem.get_on_hand_by_line({'id':line_id})
+        if val > current_stock:
+            flash("cannot ship more than on hand, make manual adjustment if necessary","qty"+str(line_id))
+            return redirect(f"/sales/{order_id}/ship")
+    except ValueError:
+            flash("quantity must be numerical", "qty"+str(line_id))
+            return redirect(f"/sales/{order_id}/ship")
+
+    SaleLineItem.update_shipped(data)
+    return redirect(f"/sales/{order_id}/ship")

@@ -1,0 +1,43 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Ship Sales Order{% endblock title %}
+{% block main %}
+    <div class="container text-center">
+        <h1>Shipping Order Number {{one_order.id}}</h1>
+        <h3>Customer: {{one_order.customer.name}}</h3>
+        <h3>Status: {{statuses[one_order.status]}}</h3>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Ordered</th>
+                    <th>Shipped</th>
+                    <th>Not Shipped</th>
+                    <th>On Hand</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in one_order.items %}
+                    <tr>
+                        <td>{{item.stock_item}}</td>
+                        <td>{{item.ordered_quantity}}</td>
+                        <td>
+                            <form action="/sales/{{one_order.id}}/ship_order_line/{{item.id}}" method="post">
+                                <input type="number" name="shipped_quantity" id="shipped_quantity" value="{{item.shipped_quantity}}">
+                                <button class="btn btn-primary">Update</button>
+                                {% for message in get_flashed_messages(category_filter=['qty'+(item.id|string)]) %}
+                                <p class="text-danger">{{message}}</p>
+                                {% endfor %}
+                            </form>
+                        </td>
+                        <td>{{item.ordered_quantity - item.shipped_quantity}}</td>
+                        <td>{{item.on_hand}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center gap-4">
+            <a href="/sales/{{one_order.id}}/ship_final" class="btn btn-outline-danger" onclick="shipHandler(event)">Ship With Current Values</a>
+        </div>
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='remove_script.js') }}"></script>
+{% endblock main %}

@@ -19,3 +19,15 @@ function cancelHandler(e){
         e.preventDefault()
     }        
 }
+
+function shipHandler(e,with_auto_fill=false){
+    let confirmed;
+    if (with_auto_fill){
+        confirmed = confirm(`This action will attempt to adjust all shipped quantities to ordered quantities. If this is successful, sales order will be finalized as shipped in full and inventory will be affected. If order cannot be shipped in full, errors will show on lines that do not have enough stock`)
+    } else {
+        confirmed = confirm(`This action will finalizing shipping with current shipped values. Inventory will be affected.`)
+    }
+    if (!confirmed){
+        e.preventDefault()
+    }        
+}

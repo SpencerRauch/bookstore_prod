@@ -41,6 +41,19 @@ class SaleLineItem:
         return connect_to_mysql(DATABASE).query_db(query,data)
     
     @classmethod
+    def get_on_hand_by_line(cls,data):
+        query = """
+            SELECT stock_level FROM sale_line_items
+            JOIN stock_items ON
+            stock_items.id = stock_item_id
+            WHERE sale_line_items.id = %(id)s;
+        """
+        results = connect_to_mysql(DATABASE).query_db(query,data)
+        if results:
+            return results[0]['stock_level']
+        return False
+    
+    @classmethod
     def delete(cls,data):
         query = """
             DELETE FROM sale_line_items WHERE id = %(id)s;

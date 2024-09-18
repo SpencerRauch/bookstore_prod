@@ -59,6 +59,11 @@ class StockItem:
             all_items.append(cls(row, True))
         return all_items
     
+    @classmethod
+    def ship_lines(cls, lines):
+        for line in lines:
+            cls.direct_adjust({'adjustment':0-line.shipped_quantity,'id':line.stock_item_id})
+    
     @staticmethod
     def valid_stock_item(data):
         is_valid = True
