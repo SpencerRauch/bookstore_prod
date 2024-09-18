@@ -135,6 +135,7 @@ def ship_ordered(order_id,line_id):
             flash("quantity must be positive.","qty"+str(line_id))
             return redirect(f"/sales/{order_id}/ship")
         current_stock = SaleLineItem.get_on_hand_by_line({'id':line_id})
+        print(current_stock)
         if val > current_stock:
             flash("cannot ship more than on hand, make manual adjustment if necessary","qty"+str(line_id))
             return redirect(f"/sales/{order_id}/ship")
