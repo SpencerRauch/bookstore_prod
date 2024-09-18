@@ -24,6 +24,7 @@
                 <tr>
                     <th>Item</th>
                     <th>Currently Ordered</th>
+                    <th>On Hand</th>
                     <th>Update QTY</th>
                     <th>Remove From Order</th>
                 </tr>
@@ -33,6 +34,7 @@
                 <tr>
                     <td>{{item.stock_item}}</td>
                     <td>{{item.ordered_quantity}}</td>
+                    <td>{{item.on_hand}}</td>
                     <td>
                         <form action="/sales/{{to_edit.id}}/adjust_order_line/{{item.id}}" method="post">
                             <label for="ordered_quantity">New Qty</label>
