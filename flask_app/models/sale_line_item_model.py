@@ -44,7 +44,9 @@ class SaleLineItem:
     def ship_full(cls, lines):
         full = True
         for line in lines:
-            if line.ordered_quantity <= line.on_hand:
+            if line.ordered_quantity == line.shipped_quantity:
+                pass
+            elif line.ordered_quantity <= line.on_hand:
                 cls.update_shipped({"id":line.id,"shipped_quantity":line.ordered_quantity})
             else:
                 full = False

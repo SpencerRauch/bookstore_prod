@@ -64,19 +64,20 @@ class StockItem:
         empty = True
         errors = False
         for line in lines:
+            if empty and line.shipped_quantity > 0:
+                empty = False
             if line.shipped_quantity > line.on_hand:
                 flash("ERROR shipped quantity exceeds on hand stock.", "qty"+str(line.id))
                 flash("ERRORS BELOW Inventory not adjusted", "ship_final")
                 errors = True
             print(line.shipped_quantity)
-            if empty and line.shipped_quantity > 0:
-                empty = False
         if errors:
             return False
         if empty:
             flash("ERROR: nothing to ship", "ship_final")
             return False
-        cls.direct_adjust({'adjustment':0-line.shipped_quantity,'id':line.stock_item_id})
+        for line in lines:
+            cls.direct_adjust({'adjustment':0-line.shipped_quantity,'id':line.stock_item_id})
         return True
     
     
