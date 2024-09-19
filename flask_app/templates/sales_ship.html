@@ -38,7 +38,7 @@
                             <span class="text-danger">OVERSHIPPED</span>
                         {% endif %}
                         </td>
-                        <td>{{item.on_hand}}</td>
+                        <td><a href="/inventory/{{item.stock_item_id}}/adjust_form">{{item.on_hand}}</a></td>
                     </tr>
                 {% endfor %}
             </tbody>

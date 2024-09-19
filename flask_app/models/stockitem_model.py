@@ -61,22 +61,23 @@ class StockItem:
     
     @classmethod
     def ship_lines(cls, lines):
+        empty = True
+        errors = False
         for line in lines:
-            errors = False
-            empty = True
             if line.shipped_quantity > line.on_hand:
                 flash("ERROR shipped quantity exceeds on hand stock.", "qty"+str(line.id))
                 flash("ERRORS BELOW Inventory not adjusted", "ship_final")
                 errors = True
-                if empty and line.shipped_quantity > 0:
-                    empty = False
-            if errors:
-                return False
-            if empty:
-                flash("ERROR: nothing to ship", "ship_final")
-                return False
-            cls.direct_adjust({'adjustment':0-line.shipped_quantity,'id':line.stock_item_id})
-            return True
+            print(line.shipped_quantity)
+            if empty and line.shipped_quantity > 0:
+                empty = False
+        if errors:
+            return False
+        if empty:
+            flash("ERROR: nothing to ship", "ship_final")
+            return False
+        cls.direct_adjust({'adjustment':0-line.shipped_quantity,'id':line.stock_item_id})
+        return True
     
     @staticmethod
     def valid_stock_item(data):
