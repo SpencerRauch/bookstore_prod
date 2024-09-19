@@ -122,6 +122,14 @@ def finalize_shipping(id):
     SalesOrder.update_status({'id':id,'status':2})
     return redirect('/sales')
 
+@app.route('/sales/<int:id>/ship_full')
+@enforce_inventory_access
+def set_full_ship(id):
+    lines = SaleLineItem.get_all_for_order({'id':id})
+    SaleLineItem.ship_full(lines)
+    return redirect(f"/sales/{id}/ship")
+
+
 @app.route('/sales/<int:order_id>/ship_order_line/<int:line_id>', methods=['POST'])
 @enforce_inventory_access
 def ship_ordered(order_id,line_id):

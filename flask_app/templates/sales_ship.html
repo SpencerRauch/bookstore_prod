@@ -44,6 +44,7 @@
             </tbody>
         </table>
         <div class="d-flex justify-content-center align-items-center gap-4">
+            <a href="/sales/{{one_order.id}}/ship_full" class="btn btn-outline-danger" onclick="shipHandler(event,true)">Set Shipped Quantites to Max</a>
             <a href="/sales/{{one_order.id}}/ship_final" class="btn btn-outline-danger" onclick="shipHandler(event)">Ship With Current Values</a>
         </div>
     </div>

@@ -79,6 +79,7 @@ class StockItem:
         cls.direct_adjust({'adjustment':0-line.shipped_quantity,'id':line.stock_item_id})
         return True
     
+    
     @staticmethod
     def valid_stock_item(data):
         is_valid = True

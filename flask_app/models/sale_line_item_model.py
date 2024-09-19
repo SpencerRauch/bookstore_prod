@@ -41,6 +41,19 @@ class SaleLineItem:
         return connect_to_mysql(DATABASE).query_db(query,data)
     
     @classmethod
+    def ship_full(cls, lines):
+        full = True
+        for line in lines:
+            if line.ordered_quantity <= line.on_hand:
+                cls.update_shipped({"id":line.id,"shipped_quantity":line.ordered_quantity})
+            else:
+                full = False
+                cls.update_shipped({"id":line.id,"shipped_quantity":line.on_hand})
+        if not full:
+            flash("Unable to ship in full, check below", "ship_final")
+
+    
+    @classmethod
     def get_on_hand_by_line(cls,data):
         query = """
             SELECT stock_level FROM sale_line_items
