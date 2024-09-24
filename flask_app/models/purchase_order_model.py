@@ -1,6 +1,6 @@
 from flask_app.config.mysqlconfig import connect_to_mysql
 from flask_app import DATABASE
-# from flask_app.models import sale_line_item_model
+from flask_app.models import purchase_line_item_model
 from flask_app.models import manufacturer_model
 from flask import flash
 import re
@@ -12,7 +12,7 @@ class PurchaseOrder:
     statuses = {
         0: 'entering',
         1: 'ordered',
-        2: 'shipped',
+        2: 'received',
         3: 'cancelled'
     }
     
@@ -26,8 +26,8 @@ class PurchaseOrder:
         if with_manufacturer:
             self.manufacturer = manufacturer_model.Manufacturer.get_by_id({'id':self.manufacturer_id})
         if with_items:
-            # self.items = sale_line_item_model.SaleLineItem.get_all_for_order({'id':self.id})
-            pass
+            self.items = purchase_line_item_model.PurchaseLineItem.get_all_for_order({'id':self.id})
+
 
 
 
@@ -49,11 +49,11 @@ class PurchaseOrder:
     @classmethod
     def get_all_with_manufacturer(cls):
         query = """
-            SELECT purchase_orders.*, manufacturers.*, COUNT(purchase_sale_items.id) as item_count FROM purchase_orders
+            SELECT purchase_orders.*, manufacturers.*, COUNT(purchase_line_items.id) as item_count FROM purchase_orders
             JOIN manufacturers
             ON manufacturer_id = manufacturers.id
-            LEFT JOIN purchase_sale_items
-            ON purchase_sale_items.sales_order_id = purchase_orders.id
+            LEFT JOIN purchase_line_items
+            ON purchase_line_items.purchase_order_id = purchase_orders.id
             GROUP BY purchase_orders.id
             ORDER BY purchase_orders.id DESC;
         """
@@ -89,7 +89,7 @@ class PurchaseOrder:
         is_valid = True
         if len(data['manufacturer_id']) < 1:
             is_valid = False
-            flash('Customer required')
+            flash('Manufacturer required')
         # potential_sale_order = Manufacturer.get_by_name({'name':data['name']})
         # if potential_sale_order:
         #     is_valid = False

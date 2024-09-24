@@ -1,0 +1,62 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Editing Order{% endblock title %}
+{% block main %}
+    <div class="container text-center">
+        <h1>Editing Order {{to_edit.id}} for {{to_edit.manufacturer.name}}</h1>
+        <form action="/purchasing/{{to_edit.id}}/add_item" method="post">
+            <label for="stock_item_id">Item ID:</label>
+            <input list="items" name="stock_item_id" placeholder="search for items...">
+            <datalist id="items">
+                <option value="">-- select --</option>
+                {% for one_item in all_items %}
+                    <option value="{{one_item.id}}">{{one_item.name}} by {{one_item.manufacturer.name}}</option>
+                {% endfor %}
+            </datalist>
+            <label for="quantity">QTY</label>
+            <input type="number" name="quantity" id="quantity">
+            <button class="btn btn-info rounded">+</button>
+            {% for message in get_flashed_messages(category_filter=['new_line']) %}
+                <p class="text-danger">{{message}}</p>
+            {% endfor %}
+        </form>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Currently Ordered</th>
+                    <th>On Hand</th>
+                    <th>Update QTY</th>
+                    <th>Remove From Order</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in to_edit.items %}
+                <tr>
+                    <td>{{item.stock_item}}</td>
+                    <td>{{item.ordered_quantity}}</td>
+                    <td>{{item.on_hand}}</td>
+                    <td>
+                        <form action="/purchasing/{{to_edit.id}}/adjust_order_line/{{item.id}}" method="post">
+                            <label for="ordered_quantity">New Qty</label>
+                            <input type="number" name="ordered_quantity" id="ordered_quantity">
+                            <button class="btn btn-primary">Update</button>
+                            {% for message in get_flashed_messages(category_filter=['qty'+(item.id|string)]) %}
+                                <p class="text-danger">{{message}}</p>
+                            {% endfor %}
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/purchasing/{{to_edit.id}}/remove_order_line/{{item.id}}" method="post"
+                        onsubmit="removeHandler(event, '{{item.stock_item}}')">
+                            <button class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/purchasing/{{to_edit.id}}/finalize" class="btn btn-danger" onclick="finalizeHandler(event)">Finalize (Mark ready to ship)</a>
+        <a href="/purchasing/{{to_edit.id}}/cancel" class="btn btn-danger" onclick="cancelHandler(event)">Cancel Entire Order</a>
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='remove_script.js') }}"></script>
+{% endblock main %}

@@ -13,7 +13,7 @@ class PurchaseLineItem:
         self.ordered_quantity = data['ordered_quantity']
         self.received_quantity = data['received_quantity']
         self.stock_item_id = data['stock_item_id']
-        self.sales_order_id = data['sales_order_id']
+        self.purchase_order_id = data['purchase_order_id']
         self.created_at = data['created_at']
         self.updated_at = data['updated_at']
 
@@ -21,8 +21,8 @@ class PurchaseLineItem:
     @classmethod
     def create(cls,data):
         query = """
-            INSERT INTO purchase_line_items (ordered_quantity, sales_order_id, stock_item_id)
-            VALUES (%(ordered_quantity)s, %(sales_order_id)s, %(stock_item_id)s);
+            INSERT INTO purchase_line_items (ordered_quantity, purchase_order_id, stock_item_id)
+            VALUES (%(ordered_quantity)s, %(purchase_order_id)s, %(stock_item_id)s);
         """
         return connect_to_mysql(DATABASE).query_db(query,data)
     
@@ -75,7 +75,7 @@ class PurchaseLineItem:
             SELECT * FROM purchase_line_items
             JOIN stock_items
             ON stock_items.id = stock_item_id
-            WHERE sales_order_id = %(id)s;
+            WHERE purchase_order_id = %(id)s;
         """
         results = connect_to_mysql(DATABASE).query_db(query,data)
         all_items = []

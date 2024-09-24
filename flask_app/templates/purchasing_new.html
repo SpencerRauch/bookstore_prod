@@ -1,0 +1,23 @@
+{% extends 'nav_bar.html' %}
+{% block title %}New Purchase Order{% endblock title %}
+{% block main %}
+    <div class="container text-center">
+        <h1>New Purchase Order</h1>
+    <form action="/purchasing/create" method="post">
+        <div class="mb-3">
+            <label for="manufacturer_id">Manufacturer</label>
+            <select name="manufacturer_id" id="manufacturer_id">
+                <option value="">-- select -- </option>
+                {% for ea_manufacturer in all_manufacturers %}
+                <option value="{{ea_manufacturer.id}}">{{ea_manufacturer.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button class="btn btn-primary mb-3">Add</button>
+        <a href="/purchasing" class="btn btn-danger mb-3">Cancel</a>
+        {% for message in get_flashed_messages() %}
+            <p class="text-danger">{{message}}</p>
+        {% endfor %}
+    </form>
+    </div>
+{% endblock main %}

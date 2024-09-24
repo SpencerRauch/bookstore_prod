@@ -20,6 +20,20 @@ function cancelHandler(e){
     }        
 }
 
+function finalizeHandlerPO(e){
+    let confirmed = confirm(`Are you sure you want to mark this purchase order as ready to receive?`)
+    if (!confirmed){
+        e.preventDefault()
+    }    
+}
+
+function cancelHandlerPO(e){
+    let confirmed = confirm(`Are you sure you want to cancel this purchase order?`)
+    if (!confirmed){
+        e.preventDefault()
+    }        
+}
+
 function shipHandler(e,with_auto_fill=false){
     let confirmed;
     if (with_auto_fill){
