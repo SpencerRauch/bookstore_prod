@@ -45,3 +45,14 @@ function shipHandler(e,with_auto_fill=false){
         e.preventDefault()
     }        
 }
+function receiveHandler(e,with_auto_fill=false){
+    let confirmed;
+    if (with_auto_fill){
+        confirmed = confirm(`This action will adjust all received quantities to ordered quantities. This will overwrite existing received quantities`)
+    } else {
+        confirmed = confirm(`This action will finalize the receipt of the purchase order. Inventory will be affected.`)
+    }
+    if (!confirmed){
+        e.preventDefault()
+    }        
+}

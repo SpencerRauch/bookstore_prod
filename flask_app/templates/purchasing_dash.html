@@ -36,7 +36,7 @@
                             <a href="/purchasing/{{ea_order.id}}/cancel" class="btn btn-danger" onclick="cancelHandlerPO(event)">Cancel</a> 
                         {% endif %}
                     {% if ea_order.status == 1 %}
-                        <a href="/purchasing/{{ea_order.id}}/ship" class="btn btn-primary">Ship</a> 
+                        <a href="/purchasing/{{ea_order.id}}/receive" class="btn btn-primary">Receive</a> 
                     {% endif %}
                     </td>
                 </tr>

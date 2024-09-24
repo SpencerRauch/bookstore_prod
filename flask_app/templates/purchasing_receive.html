@@ -1,0 +1,52 @@
+{% extends 'nav_bar.html' %}
+{% block title %}Receive Purchase Order{% endblock title %}
+{% block main %}
+    <div class="container text-center">
+        <h1>Received Purchase Order Number {{one_order.id}}</h1>
+        <h3>Ordered from: {{one_order.manufacturer.name}}</h3>
+        <h3>Status: {{statuses[one_order.status]}}</h3>
+        {% for message in get_flashed_messages(category_filter=['ship_final']) %}
+        <p class="text-danger">{{message}}</p>
+        {% endfor %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Ordered</th>
+                    <th>Received</th>
+                    <th>Balance</th>
+                    <th>On Hand</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in one_order.items %}
+                    <tr>
+                        <td>{{item.stock_item}}</td>
+                        <td>{{item.ordered_quantity}}</td>
+                        <td>
+                            <form action="/purchasing/{{one_order.id}}/receive_order_line/{{item.id}}" method="post">
+                                <input type="number" name="received_quantity" id="received_quantity" value="{{item.received_quantity}}">
+                                <button class="btn btn-primary">Update</button>
+                                {% for message in get_flashed_messages(category_filter=['qty'+(item.id|string)]) %}
+                                <p class="text-danger">{{message}}</p>
+                                {% endfor %}
+                            </form>
+                        </td>
+                        <td>
+                            {{item.ordered_quantity - item.received_quantity}}
+                        {% if item.ordered_quantity - item.received_quantity < 0 %}
+                            <span class="text-danger">OVER RECEIVED</span>
+                        {% endif %}
+                        </td>
+                        <td>{{item.on_hand}}</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-center align-items-center gap-4">
+            <a href="/purchasing/{{one_order.id}}/receive_full" class="btn btn-outline-danger" onclick="receiveHandler(event,true)">Set Received To Full Amounts</a>
+            <a href="/purchasing/{{one_order.id}}/receive_final" class="btn btn-outline-danger" onclick="receiveHandler(event)">Process Into Inventory</a>
+        </div>
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename='remove_script.js') }}"></script>
+{% endblock main %}

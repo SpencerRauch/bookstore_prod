@@ -79,8 +79,19 @@ class StockItem:
         for line in lines:
             cls.direct_adjust({'adjustment':0-line.shipped_quantity,'id':line.stock_item_id})
         return True
+
+    @classmethod
+    def receive_lines(cls, lines):
+        for line in lines:
+            if not cls.get_by_id({'id':line.stock_item_id}):
+                flash(f"ERROR: Item not found in database, receiving abandoned. See below","ship_final")
+                flash(f"ITEM ID ERROR", "qty"+str(line.id))
+                return False
+        for line in lines:
+            cls.direct_adjust({'adjustment':line.received_quantity,'id':line.stock_item_id})
+        return True
     
-    
+
     @staticmethod
     def valid_stock_item(data):
         is_valid = True

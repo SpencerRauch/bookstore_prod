@@ -114,8 +114,8 @@ def receiving_reconciliation(id):
 @enforce_inventory_access
 def finalize_receiving(id):
     lines = PurchaseLineItem.get_all_for_order({'id':id})
-    # if not StockItem.ship_lines(lines): #TODO: Write receive lines method
-    #     return redirect(f"/purchasing/{id}/ship")
+    if not StockItem.receive_lines(lines):
+        return redirect(f"/purchasing/{id}/receive")
     PurchaseOrder.update_status({'id':id,'status':2})
     return redirect('/purchasing')
 
@@ -138,10 +138,10 @@ def receive_ordered(order_id,line_id):
         val = int(request.form['received_quantity'])
         if val < 0:
             flash("quantity must be positive.","qty"+str(line_id))
-            return redirect(f"/purchasing/{order_id}/ship")
+            return redirect(f"/purchasing/{order_id}/receive")
     except ValueError:
             flash("quantity must be numerical", "qty"+str(line_id))
-            return redirect(f"/purchasing/{order_id}/ship")
+            return redirect(f"/purchasing/{order_id}/receive")
 
     PurchaseLineItem.update_received(data)
-    return redirect(f"/purchasing/{order_id}/ship")
+    return redirect(f"/purchasing/{order_id}/receive")

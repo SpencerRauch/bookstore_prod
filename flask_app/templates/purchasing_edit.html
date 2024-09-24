@@ -55,8 +55,8 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="/purchasing/{{to_edit.id}}/finalize" class="btn btn-danger" onclick="finalizeHandler(event)">Finalize (Mark ready to ship)</a>
-        <a href="/purchasing/{{to_edit.id}}/cancel" class="btn btn-danger" onclick="cancelHandler(event)">Cancel Entire Order</a>
+        <a href="/purchasing/{{to_edit.id}}/finalize" class="btn btn-danger" onclick="finalizeHandler(event)">Finalize (Mark ready to receive)</a>
+        <a href="/purchasing/{{to_edit.id}}/cancel" class="btn btn-danger" onclick="cancelHandler(event)">Cancel Entire Purchase</a>
     </div>
     <script type="text/javascript" src="{{ url_for('static', filename='remove_script.js') }}"></script>
 {% endblock main %}
