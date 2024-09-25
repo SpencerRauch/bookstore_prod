@@ -2,6 +2,7 @@
 {% block title %}Dashboard{% endblock title %}
 {% block main %}
     <div class="container">
+        <h2>Sales Dashboard</h2>
         {% if employee.sales_access == 1 %}
         <div class="d-flex justify-content-left gap-3">
             <a href="/sales/new" class="btn btn-info">New Sales Order</a>
