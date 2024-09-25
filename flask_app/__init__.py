@@ -1,5 +1,0 @@
-from flask import Flask
-
-app = Flask(__name__)
-app.secret_key = 'PLACEHOLDER KEY DO NOT USE IN PRODUCTION'
-DATABASE = "bookstoreinvento$bookstore"
